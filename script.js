@@ -70,7 +70,8 @@ function update() {
             player.y + player.height > blocks[i].y
         ) {
             gameOver = true;
-            alert("Game Over! Final Score: " + score);
+            saveScore(score);
+alert("Game Over! Final Score: " + score);
         }
 
         // Remove off screen
@@ -119,3 +120,4 @@ function displayLeaderboard() {
     });
 }
 update();
+displayLeaderboard();
