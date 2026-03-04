@@ -1,6 +1,6 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-
+let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
 let player = {
     x: 180,
     y: 550,
