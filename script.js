@@ -95,5 +95,27 @@ function restartGame() {
 
 // Spawn blocks every second
 setInterval(createBlock, 1000);
+function saveScore(newScore) {
+    leaderboard.push(newScore);
 
+    // Sort highest to lowest
+    leaderboard.sort((a, b) => b - a);
+
+    // Keep only top 5
+    leaderboard = leaderboard.slice(0, 5);
+
+    localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+    displayLeaderboard();
+}
+
+function displayLeaderboard() {
+    const list = document.getElementById("leaderboard");
+    list.innerHTML = "";
+
+    leaderboard.forEach(score => {
+        const li = document.createElement("li");
+        li.textContent = score;
+        list.appendChild(li);
+    });
+}
 update();
