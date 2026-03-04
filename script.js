@@ -22,6 +22,16 @@ function movePlayer(e) {
     if (e.key === "ArrowRight" || e.key === "d") {
         player.x += player.speed;
     }
+
+    // Prevent going off left side
+    if (player.x < 0) {
+        player.x = 0;
+    }
+
+    // Prevent going off right side
+    if (player.x + player.width > canvas.width) {
+        player.x = canvas.width - player.width;
+    }
 }
 
 function createBlock() {
