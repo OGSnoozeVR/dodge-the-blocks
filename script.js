@@ -1,48 +1,45 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+
 let player = {
     x: 180,
     y: 550,
     width: 40,
     height: 40,
-    speed: 6
+    speed: 10, // faster player
+    color: "lime"
 };
 
 let blocks = [];
 let score = 0;
 let gameOver = false;
+let spawnRate = 1000;
+let blockSpeedMultiplier = 1;
+let latestHighScoreIndex = -1;
+
+let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+
+const blockImage = new Image();
+blockImage.src = "https://i.imgur.com/8Qf6FQF.png"; // free block image
 
 document.addEventListener("keydown", movePlayer);
 
 function movePlayer(e) {
-    if (e.key === "ArrowLeft" || e.key === "a") {
-        player.x -= player.speed;
-    }
-    if (e.key === "ArrowRight" || e.key === "d") {
-        player.x += player.speed;
-    }
+    if (e.key === "ArrowLeft" || e.key === "a") player.x -= player.speed;
+    if (e.key === "ArrowRight" || e.key === "d") player.x += player.speed;
 
-    // Prevent going off left side
-    if (player.x < 0) {
-        player.x = 0;
-    }
-
-    // Prevent going off right side
-    if (player.x + player.width > canvas.width) {
-        player.x = canvas.width - player.width;
-    }
+    player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
 }
 
 function createBlock() {
-    let size = 30;
+    let size = 40;
     let x = Math.random() * (canvas.width - size);
     blocks.push({
         x: x,
         y: -size,
         width: size,
         height: size,
-        speed: 3 + Math.random() * 3
+        speed: (3 + Math.random() * 3) * blockSpeedMultiplier
     });
 }
 
@@ -52,15 +49,14 @@ function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw Player
-    ctx.fillStyle = "lime";
+    ctx.fillStyle = player.color;
     ctx.fillRect(player.x, player.y, player.width, player.height);
 
     // Update Blocks
     for (let i = 0; i < blocks.length; i++) {
         blocks[i].y += blocks[i].speed;
 
-        ctx.fillStyle = "red";
-        ctx.fillRect(blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height);
+        ctx.drawImage(blockImage, blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height);
 
         // Collision
         if (
@@ -69,9 +65,7 @@ function update() {
             player.y < blocks[i].y + blocks[i].height &&
             player.y + player.height > blocks[i].y
         ) {
-            gameOver = true;
-            saveScore(score);
-alert("Game Over! Final Score: " + score);
+            endGame();
         }
 
         // Remove off screen
@@ -85,25 +79,40 @@ alert("Game Over! Final Score: " + score);
     requestAnimationFrame(update);
 }
 
+function endGame() {
+    gameOver = true;
+    saveScore(score);
+
+    document.getElementById("finalScore").innerText =
+        "Final Score: " + score;
+
+    document.getElementById("gameOverScreen").classList.remove("hidden");
+}
+
 function restartGame() {
     blocks = [];
     score = 0;
     gameOver = false;
-    player.x = 180;
+    blockSpeedMultiplier = 1;
+    latestHighScoreIndex = -1;
+
     document.getElementById("score").innerText = "Score: 0";
+    document.getElementById("gameOverScreen").classList.add("hidden");
+
     update();
 }
 
-// Spawn blocks every second
-setInterval(createBlock, 1000);
 function saveScore(newScore) {
-    leaderboard.push(newScore);
+    const nameInput = document.getElementById("playerName");
+    let playerName = nameInput.value.trim() || "Anonymous";
 
-    // Sort highest to lowest
-    leaderboard.sort((a, b) => b - a);
+    const entry = { name: playerName, score: newScore };
 
-    // Keep only top 5
+    leaderboard.push(entry);
+    leaderboard.sort((a, b) => b.score - a.score);
     leaderboard = leaderboard.slice(0, 5);
+
+    latestHighScoreIndex = leaderboard.findIndex(e => e === entry);
 
     localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
     displayLeaderboard();
@@ -113,11 +122,41 @@ function displayLeaderboard() {
     const list = document.getElementById("leaderboard");
     list.innerHTML = "";
 
-    leaderboard.forEach(score => {
+    leaderboard.forEach((entry, index) => {
         const li = document.createElement("li");
-        li.textContent = score;
+        li.textContent = `${entry.name} – ${entry.score}`;
+
+        if (index === latestHighScoreIndex) {
+            li.classList.add("gold");
+        }
+
         list.appendChild(li);
     });
 }
-update();
+
+function clearLeaderboard() {
+    leaderboard = [];
+    localStorage.removeItem("leaderboard");
+    displayLeaderboard();
+}
+
+function setColor(color) {
+    player.color = color;
+}
+
+// Difficulty scaling
+setInterval(() => {
+    if (!gameOver) {
+        blockSpeedMultiplier += 0.1;
+        if (spawnRate > 400) {
+            spawnRate -= 50;
+            clearInterval(spawnInterval);
+            spawnInterval = setInterval(createBlock, spawnRate);
+        }
+    }
+}, 5000);
+
+let spawnInterval = setInterval(createBlock, spawnRate);
+
 displayLeaderboard();
+update();
