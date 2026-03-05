@@ -1,25 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Dodge The Blocks</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <h1>Dodge The Blocks</h1>
-<p>Move with Arrow Keys or A/D</p>
+
 <p id="score">Score: 0</p>
 
-<label for="playerName">Player Name:</label>
+<label>Player Name:</label>
 <input type="text" id="playerName" placeholder="Enter your name" />
 
 <h2>Leaderboard</h2>
 <ol id="leaderboard"></ol>
-    
+<button onclick="clearLeaderboard()">Clear Leaderboard</button>
+
+<h2>Shop</h2>
+<div id="shop">
+    <button onclick="setColor('lime')">Green</button>
+    <button onclick="setColor('cyan')">Cyan</button>
+    <button onclick="setColor('yellow')">Yellow</button>
+    <button onclick="setColor('magenta')">Magenta</button>
+</div>
+
 <canvas id="gameCanvas" width="400" height="600"></canvas>
-    
-<button onclick="restartGame()">Restart</button>
+
+<div id="gameOverScreen" class="hidden">
+    <h2>Game Over</h2>
+    <p id="finalScore"></p>
+    <button onclick="restartGame()">Play Again</button>
+</div>
 
 <script src="script.js"></script>
 </body>
