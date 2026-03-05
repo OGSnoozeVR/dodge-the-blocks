@@ -12,7 +12,27 @@ canvas {
 }
 
 button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    font-size: 16px;
+    margin: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+#gameOverScreen {
+    position: absolute;
+    top: 220px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222;
+    padding: 25px;
+    border: 3px solid gold;
+    box-shadow: 0 0 20px gold;
+}
+
+.gold {
+    color: gold;
+    font-weight: bold;
 }
