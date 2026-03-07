@@ -90,6 +90,27 @@ if (blocks[i].y > canvas.height) {
     document.getElementById("score").innerText = "Score: " + score;
 }
     }
+for (let i = 0; i < coinDrops.length; i++) {
+
+        coinDrops[i].y += 3;
+
+        ctx.drawImage(coinImage, coinDrops[i].x, coinDrops[i].y, 25, 25);
+
+        if (
+            player.x < coinDrops[i].x + 25 &&
+            player.x + player.width > coinDrops[i].x &&
+            player.y < coinDrops[i].y + 25 &&
+            player.y + player.height > coinDrops[i].y
+        ) {
+
+            coins++;
+            document.getElementById("coins").innerText = "Coins: " + coins;
+
+            document.getElementById("coinSound").play();
+
+            coinDrops.splice(i, 1);
+        }
+    }
 
     requestAnimationFrame(update);
 }
