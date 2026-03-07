@@ -74,11 +74,21 @@ frame++;
 if (frame > 3) frame = 0; {endGame(); }
 
         // Remove off screen
-        if (blocks[i].y > canvas.height) {
-            blocks.splice(i, 1);
-            score++;
-            document.getElementById("score").innerText = "Score: " + score;
-        }
+if (blocks[i].y > canvas.height) {
+
+    // 30% chance to spawn a coin
+    if (Math.random() < 0.3) {
+        coinDrops.push({
+            x: blocks[i].x,
+            y: blocks[i].y
+        });
+    }
+
+    blocks.splice(i, 1);
+
+    score++;
+    document.getElementById("score").innerText = "Score: " + score;
+}
     }
 
     requestAnimationFrame(update);
