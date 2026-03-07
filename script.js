@@ -1,6 +1,8 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+let particles = [];
+
 let coinDrops = [];
 const coinImage = new Image();
 coinImage.src = "assets/coin.png";
@@ -129,9 +131,23 @@ function restartGame() {
     blocks = [];
     score = 0;
     gameOver = false;
+function buySkin(file, price) {
+
+    if (coins < price) {
+        alert("Not enough coins!");
+        return;
+    }
+
+    coins -= price;
+
+    playerSprite.src = "assets/" + file;
+
+    document.getElementById("coins").innerText =
+        "Coins: " + coins;
+}
     blockSpeedMultiplier = 1;
     latestHighScoreIndex = -1;
-
+    document.getElementById("music").play();
     document.getElementById("score").innerText = "Score: 0";
     document.getElementById("gameOverScreen").classList.add("hidden");
 
