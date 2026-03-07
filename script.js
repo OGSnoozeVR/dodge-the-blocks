@@ -56,6 +56,8 @@ function update() {
     ctx.fillStyle = player.color;
     ctx.fillRect(player.x, player.y, player.width, player.height);
 
+
+    
     // Update Blocks
     for (let i = 0; i < blocks.length; i++) {
         blocks[i].y += blocks[i].speed;
@@ -113,7 +115,22 @@ for (let i = 0; i < coinDrops.length; i++) {
             coinDrops.splice(i, 1);
         }
     }
+for (let i = 0; i < particles.length; i++) {
 
+    let p = particles[i];
+
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life--;
+
+    ctx.fillStyle = "orange";
+    ctx.fillRect(p.x, p.y, 4, 4);
+
+    if (p.life <= 0) {
+        particles.splice(i,1);
+        i--;
+    }
+}
     requestAnimationFrame(update);
 }
 // PARTICLE EXPLOSION FUNCTION
@@ -162,7 +179,8 @@ function buySkin(file, price) {
     document.getElementById("music").play();
     document.getElementById("score").innerText = "Score: 0";
     document.getElementById("gameOverScreen").classList.add("hidden");
-
+    createExplosion(player.x, player.y);
+    document.getElementById("hitSound").play();
     update();
 }
 
