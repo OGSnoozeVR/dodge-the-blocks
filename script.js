@@ -54,17 +54,20 @@ function update() {
     for (let i = 0; i < blocks.length; i++) {
         blocks[i].y += blocks[i].speed;
 
-        ctx.drawImage(blockImage, blocks[i].x, blocks[i].y, blocks[i].width, blocks[i].height);
+        ctx.drawImage(
+    playerSprite,
+    frame * 32,
+    0,
+    32,
+    32,
+    player.x,
+    player.y,
+    player.width,
+    player.height
+);
 
-        // Collision
-        if (
-            player.x < blocks[i].x + blocks[i].width &&
-            player.x + player.width > blocks[i].x &&
-            player.y < blocks[i].y + blocks[i].height &&
-            player.y + player.height > blocks[i].y
-        ) {
-            endGame();
-        }
+frame++;
+if (frame > 3) frame = 0; {endGame(); }
 
         // Remove off screen
         if (blocks[i].y > canvas.height) {
