@@ -1,14 +1,12 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-let player = {
-    x: 180,
-    y: 550,
-    width: 40,
-    height: 40,
-    speed: 10, // faster player
-    color: "lime"
-};
+let coins = 0;
+
+const playerSprite = new Image();
+playerSprite.src = "assets/player1.png";
+
+let frame = 0;
 
 let blocks = [];
 let score = 0;
