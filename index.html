@@ -9,22 +9,25 @@
 <h1>Dodge The Blocks</h1>
 
 <p id="score">Score: 0</p>
-
-<label>Player Name:</label>
-<input type="text" id="playerName" placeholder="Enter your name" />
-
-<h2>Leaderboard</h2>
-<ol id="leaderboard"></ol>
-<button onclick="clearLeaderboard()">Clear Leaderboard</button>
+<p id="coins">Coins: 0</p>
 
 <h2>Shop</h2>
-<div id="shop">
-    <button onclick="setColor('magenta')">Pink</button>
-    <button onclick="setColor('blue')">blue</button>
-    <button onclick="setColor('yellow')">Yellow</button>
-    <button onclick="setColor('lime')">green</button>
-</div>
 
+<button onclick="buySkin('player1.png',0)">
+Default Skin (Free)
+</button>
+
+<button onclick="buySkin('player2.png',20)">
+Robot Skin (20 coins)
+</button>
+
+<button onclick="buySkin('player3.png',40)">
+Ninja Skin (40 coins)
+</button>
+
+<audio id="coinSound" src="assets/coin.wav"></audio>
+<audio id="hitSound" src="assets/hit.wav"></audio>
+<audio id="music" src="assets/music.mp3" loop></audio>
 <canvas id="gameCanvas" width="400" height="600"></canvas>
 
 <div id="gameOverScreen" class="hidden">
