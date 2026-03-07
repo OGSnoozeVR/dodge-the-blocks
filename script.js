@@ -116,7 +116,19 @@ for (let i = 0; i < coinDrops.length; i++) {
 
     requestAnimationFrame(update);
 }
+// PARTICLE EXPLOSION FUNCTION
+function createExplosion(x, y) {
 
+    for (let i = 0; i < 30; i++) {
+        particles.push({
+            x: x,
+            y: y,
+            vx: (Math.random() - 0.5) * 8,
+            vy: (Math.random() - 0.5) * 8,
+            life: 60
+        });
+    }
+}
 function endGame() {
     gameOver = true;
     saveScore(score);
