@@ -1,6 +1,10 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+let coinDrops = [];
+const coinImage = new Image();
+coinImage.src = "assets/coin.png";
+
 let coins = 0;
 
 const playerSprite = new Image();
