@@ -11,7 +11,19 @@ A simple browser survival game built with HTML, CSS, and JavaScript.
 ## How to Run
 Just open `index.html` in your browser.
 
-## Future Improvements
-- Add sound effects
-- Add mobile controls
-- Add high score saving
+
+## Improved 
+✅ Player stays on screen
+✅ Faster player movement
+✅ Falling blocks with image textures
+✅ Coins that drop
+✅ Coin sound
+✅ Difficulty scaling
+✅ Leaderboard with player name
+✅ New high score highlighted gold
+✅ Clear leaderboard button
+✅ Game Over screen (styled)
+✅ Shop with unlockable skins
+✅ Animated player sprite support
+✅ Particle explosion on death
+✅ Background music 
