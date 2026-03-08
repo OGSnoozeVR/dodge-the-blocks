@@ -8,20 +8,21 @@
 
 <body>
 
-<div id="startMenu">
+<div id="menu">
 <h1>DODGE ULTIMATE</h1>
 <input id="playerName" placeholder="Enter Name">
-<button onclick="startGame()">Start Game</button>
+<button onclick="Game.start()">Start Game</button>
+<button onclick="Shop.open()">Shop</button>
 </div>
 
-<canvas id="gameCanvas" width="600" height="400"></canvas>
+<canvas id="gameCanvas" width="700" height="450"></canvas>
 
-<div id="pauseMenu">PAUSED</div>
+<div id="pause">PAUSED</div>
 
 <div id="gameOver">
 <h2>Game Over</h2>
 <p id="finalScore"></p>
-<button onclick="restartGame()">Restart</button>
+<button onclick="Game.restart()">Play Again</button>
 </div>
 
 <div id="mobileControls">
@@ -32,7 +33,14 @@
 <h2>Leaderboard</h2>
 <ul id="leaderboard"></ul>
 
-<script src="script.js"></script>
+<script src="game/engine.js"></script>
+<script src="game/player.js"></script>
+<script src="game/enemies.js"></script>
+<script src="game/particles.js"></script>
+<script src="game/powerups.js"></script>
+<script src="game/shop.js"></script>
+<script src="game/leaderboard.js"></script>
+<script src="main.js"></script>
 
 </body>
 </html>
