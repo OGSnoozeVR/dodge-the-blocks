@@ -9,51 +9,106 @@ height:40,
 speed:8
 }
 
-let keys = {}
-
+let keys={}
 let blocks=[]
-let coinsDrops=[]
+let bossBlocks=[]
 let particles=[]
+let powerups=[]
 
 let score=0
-let coins=0
-let gameOver=false
-let spawnRate=60
 let frame=0
+let gameRunning=false
+let paused=false
 
-let playerSprite=new Image()
-playerSprite.src="assets/player1.png"
+let spriteFrame=0
+let spriteTimer=0
 
-let blockImage=new Image()
+const sprite=new Image()
+sprite.src="assets/playerSprite.png"
+
+const blockImage=new Image()
 blockImage.src="assets/block.png"
 
-let coinImage=new Image()
-coinImage.src="assets/coin.png"
+const bossImage=new Image()
+bossImage.src="assets/boss.png"
 
-document.addEventListener("keydown",e=>keys[e.key]=true)
+const powerImage=new Image()
+powerImage.src="assets/powerup.png"
+
+document.addEventListener("keydown",e=>{
+
+keys[e.key]=true
+
+if(e.key==="p")togglePause()
+
+})
+
 document.addEventListener("keyup",e=>keys[e.key]=false)
+
+function startGame(){
+
+document.getElementById("startMenu").style.display="none"
+
+canvas.style.display="block"
+
+gameRunning=true
+
+gameLoop()
+
+}
+
+function restartGame(){
+location.reload()
+}
+
+function togglePause(){
+
+paused=!paused
+
+document.getElementById("pauseMenu").style.display=
+paused?"block":"none"
+
+}
 
 function spawnBlock(){
 
 blocks.push({
 x:Math.random()*(canvas.width-40),
-y:-40,
-width:40,
-height:40
+y:-40
+})
+
+}
+
+function spawnBoss(){
+
+bossBlocks.push({
+x:Math.random()*(canvas.width-80),
+y:-80,
+hp:5
+})
+
+}
+
+function spawnPowerup(){
+
+powerups.push({
+x:Math.random()*(canvas.width-30),
+y:-30
 })
 
 }
 
 function createExplosion(x,y){
 
-for(let i=0;i<30;i++){
+for(let i=0;i<40;i++){
 
 particles.push({
 x:x,
 y:y,
-vx:(Math.random()-0.5)*8,
-vy:(Math.random()-0.5)*8,
-life:60
+vx:(Math.random()-0.5)*10,
+vy:(Math.random()-0.5)*10,
+life:60,
+size:Math.random()*6
 })
 
 }
@@ -62,27 +117,57 @@ life:60
 
 function update(){
 
-if(gameOver)return
+if(!gameRunning || paused)return
 
 frame++
 
-if(frame%spawnRate===0){
+if(frame%60===0)spawnBlock()
 
-spawnBlock()
+if(frame%600===0)spawnBoss()
 
-if(spawnRate>20)spawnRate--
+if(frame%500===0)spawnPowerup()
 
-}
+/* LEFT RIGHT ONLY */
 
 if(keys["ArrowLeft"])player.x-=player.speed
 if(keys["ArrowRight"])player.x+=player.speed
-if(keys["ArrowUp"])player.y-=player.speed
-if(keys["ArrowDown"])player.y+=player.speed
+
+/* SCREEN LIMIT */
 
 if(player.x<0)player.x=0
-if(player.x+player.width>canvas.width)player.x=canvas.width-player.width
-if(player.y<0)player.y=0
-if(player.y+player.height>canvas.height)player.y=canvas.height-player.height
+if(player.x+player.width>canvas.width)
+player.x=canvas.width-player.width
+
+/* ANIMATION */
+
+spriteTimer++
+
+if(spriteTimer>6){
+
+spriteFrame=(spriteFrame+1)%4
+spriteTimer=0
+
+}
+
+}
+
+function drawPlayer(){
+
+ctx.drawImage(
+sprite,
+spriteFrame*32,
+0,
+32,
+32,
+player.x,
+player.y,
+40,
+40
+)
+
+}
+
+function drawBlocks(){
 
 for(let i=0;i<blocks.length;i++){
 
@@ -90,14 +175,7 @@ blocks[i].y+=4
 
 ctx.drawImage(blockImage,blocks[i].x,blocks[i].y,40,40)
 
-if(
-player.x<blocks[i].x+40 &&
-player.x+player.width>blocks[i].x &&
-player.y<blocks[i].y+40 &&
-player.y+player.height>blocks[i].y
-){
-
-document.getElementById("deathSound").play()
+if(collision(player,blocks[i])){
 
 createExplosion(player.x,player.y)
 
@@ -105,49 +183,51 @@ endGame()
 
 }
 
-if(blocks[i].y>canvas.height){
-
-score++
-
-if(Math.random()<0.3){
-
-coinsDrops.push({
-x:blocks[i].x,
-y:blocks[i].y
-})
-
-}
-
-blocks.splice(i,1)
-
 }
 
 }
 
-for(let i=0;i<coinsDrops.length;i++){
+function drawBoss(){
 
-coinsDrops[i].y+=3
+for(let i=0;i<bossBlocks.length;i++){
 
-ctx.drawImage(coinImage,coinsDrops[i].x,coinsDrops[i].y,25,25)
+bossBlocks[i].y+=2
 
-if(
-player.x<coinsDrops[i].x+25 &&
-player.x+player.width>coinsDrops[i].x &&
-player.y<coinsDrops[i].y+25 &&
-player.y+player.height>coinsDrops[i].y
-){
+ctx.drawImage(bossImage,bossBlocks[i].x,bossBlocks[i].y,80,80)
 
-coins++
+if(collision(player,bossBlocks[i])){
 
-document.getElementById("coins").innerText="Coins: "+coins
+createExplosion(player.x,player.y)
 
-document.getElementById("coinSound").play()
-
-coinsDrops.splice(i,1)
+endGame()
 
 }
 
 }
+
+}
+
+function drawPowerups(){
+
+for(let i=0;i<powerups.length;i++){
+
+powerups[i].y+=3
+
+ctx.drawImage(powerImage,powerups[i].x,powerups[i].y,30,30)
+
+if(collision(player,powerups[i])){
+
+player.speed+=2
+
+powerups.splice(i,1)
+
+}
+
+}
+
+}
+
+function drawParticles(){
 
 for(let i=0;i<particles.length;i++){
 
@@ -158,18 +238,42 @@ p.y+=p.vy
 p.life--
 
 ctx.fillStyle="orange"
-ctx.fillRect(p.x,p.y,4,4)
+ctx.fillRect(p.x,p.y,p.size,p.size)
 
 if(p.life<=0)particles.splice(i,1)
 
 }
 
-ctx.drawImage(playerSprite,player.x,player.y,player.width,player.height)
+}
+
+function collision(a,b){
+
+return(
+a.x<b.x+40 &&
+a.x+a.width>b.x &&
+a.y<b.y+40 &&
+a.y+a.height>b.y
+)
+
+}
+
+function drawScore(){
 
 ctx.fillStyle="white"
+
 ctx.fillText("Score: "+score,10,20)
 
-requestAnimationFrame(gameLoop)
+}
+
+function endGame(){
+
+gameRunning=false
+
+document.getElementById("gameOver").style.display="block"
+
+document.getElementById("finalScore").innerText="Score: "+score
+
+saveScore()
 
 }
 
@@ -179,57 +283,47 @@ ctx.clearRect(0,0,canvas.width,canvas.height)
 
 update()
 
-}
+drawPlayer()
 
-function endGame(){
+drawBlocks()
 
-gameOver=true
+drawBoss()
 
-saveScore()
+drawPowerups()
 
-document.getElementById("gameOverScreen").style.display="block"
+drawParticles()
 
-document.getElementById("finalScore").innerText="Score: "+score
+drawScore()
 
-}
+score++
 
-function restartGame(){
-
-location.reload()
+requestAnimationFrame(gameLoop)
 
 }
 
-function buySkin(file,price){
+/* MOBILE CONTROLS */
 
-if(coins<price){
+document.getElementById("leftBtn").ontouchstart=()=>keys["ArrowLeft"]=true
+document.getElementById("leftBtn").ontouchend=()=>keys["ArrowLeft"]=false
 
-alert("Not enough coins!")
+document.getElementById("rightBtn").ontouchstart=()=>keys["ArrowRight"]=true
+document.getElementById("rightBtn").ontouchend=()=>keys["ArrowRight"]=false
 
-return
-
-}
-
-coins-=price
-
-playerSprite.src="assets/"+file
-
-document.getElementById("coins").innerText="Coins: "+coins
-
-}
+/* ONLINE LEADERBOARD (placeholder) */
 
 function saveScore(){
 
 let name=document.getElementById("playerName").value||"Player"
 
-let leaderboard=JSON.parse(localStorage.getItem("leaderboard"))||[]
+let scores=JSON.parse(localStorage.getItem("scores"))||[]
 
-leaderboard.push({name,score})
+scores.push({name,score})
 
-leaderboard.sort((a,b)=>b.score-a.score)
+scores.sort((a,b)=>b.score-a.score)
 
-leaderboard=leaderboard.slice(0,10)
+scores=scores.slice(0,10)
 
-localStorage.setItem("leaderboard",JSON.stringify(leaderboard))
+localStorage.setItem("scores",JSON.stringify(scores))
 
 displayLeaderboard()
 
@@ -237,19 +331,17 @@ displayLeaderboard()
 
 function displayLeaderboard(){
 
-let leaderboard=JSON.parse(localStorage.getItem("leaderboard"))||[]
+let scores=JSON.parse(localStorage.getItem("scores"))||[]
 
 let list=document.getElementById("leaderboard")
 
 list.innerHTML=""
 
-leaderboard.forEach((entry,i)=>{
+scores.forEach(s=>{
 
 let li=document.createElement("li")
 
-li.textContent=`${entry.name} – ${entry.score}`
-
-if(i===0)li.classList.add("gold")
+li.textContent=s.name+" - "+s.score
 
 list.appendChild(li)
 
@@ -257,16 +349,4 @@ list.appendChild(li)
 
 }
 
-function clearLeaderboard(){
-
-localStorage.removeItem("leaderboard")
-
 displayLeaderboard()
-
-}
-
-displayLeaderboard()
-
-document.getElementById("music").play()
-
-gameLoop()
