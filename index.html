@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dodge The Blocks</title>
-    <link rel="stylesheet" href="style.css">
+<title>Dodge Game</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<h1>Dodge The Blocks</h1>
+<h1>Dodge Game</h1>
 
-<p id="score">Score: 0</p>
-<p id="coins">Coins: 0</p>
+<input id="playerName" placeholder="Enter Name">
+
+<div id="coins">Coins: 0</div>
+
+<canvas id="gameCanvas" width="600" height="400"></canvas>
+
+<div id="gameOverScreen">
+<h2>Game Over</h2>
+<p id="finalScore"></p>
+<button onclick="restartGame()">Play Again</button>
+</div>
 
 <h2>Shop</h2>
 
-<button onclick="buySkin('player1.png',0)">
-Default Skin (Free)
-</button>
+<button onclick="buySkin('player1.png',0)">Default (Free)</button>
+<button onclick="buySkin('player2.png',50)">Red Skin (50 coins)</button>
 
-<button onclick="buySkin('player3.png',20)">
-Pyro Skin (20 coins)
-</button>
+<h2>Leaderboard</h2>
+<ul id="leaderboard"></ul>
 
-<button onclick="buySkin('player2.png',40)">
-Ninja Skin (40 coins)
-</button>
+<button onclick="clearLeaderboard()">Clear Leaderboard</button>
 
-<audio id="coinSound" src="assets/coin.wav"></audio>
-<audio id="hitSound" src="assets/hit.wav"></audio>
-<audio id="music" src="assets/music.mp3" loop></audio>
-<canvas id="gameCanvas" width="400" height="600"></canvas>
-
-<div id="gameOverScreen" class="hidden">
-    <h2>Game Over</h2>
-    <p id="finalScore"></p>
-    <button onclick="restartGame()">Play Again</button>
-</div>
+<audio id="coinSound" src="sounds/coin.wav"></audio>
+<audio id="deathSound" src="sounds/death.wav"></audio>
+<audio id="music" src="sounds/music.mp3" loop></audio>
 
 <script src="script.js"></script>
+
 </body>
 </html>
