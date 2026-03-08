@@ -1,39 +1,36 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Dodge Game</title>
+<title>Dodge Ultimate</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>Dodge Game</h1>
-
+<div id="startMenu">
+<h1>DODGE ULTIMATE</h1>
 <input id="playerName" placeholder="Enter Name">
-
-<div id="coins">Coins: 0</div>
+<button onclick="startGame()">Start Game</button>
+</div>
 
 <canvas id="gameCanvas" width="600" height="400"></canvas>
 
-<div id="gameOverScreen">
+<div id="pauseMenu">PAUSED</div>
+
+<div id="gameOver">
 <h2>Game Over</h2>
 <p id="finalScore"></p>
-<button onclick="restartGame()">Play Again</button>
+<button onclick="restartGame()">Restart</button>
 </div>
 
-<h2>Shop</h2>
-
-<button onclick="buySkin('player1.png',0)">Default (Free)</button>
-<button onclick="buySkin('player2.png',50)">Red Skin (50 coins)</button>
+<div id="mobileControls">
+<button id="leftBtn">◀</button>
+<button id="rightBtn">▶</button>
+</div>
 
 <h2>Leaderboard</h2>
 <ul id="leaderboard"></ul>
-
-<button onclick="clearLeaderboard()">Clear Leaderboard</button>
-
-<audio id="coinSound" src="sounds/coin.wav"></audio>
-<audio id="deathSound" src="sounds/death.wav"></audio>
-<audio id="music" src="sounds/music.mp3" loop></audio>
 
 <script src="script.js"></script>
 
