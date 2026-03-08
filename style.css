@@ -8,16 +8,32 @@ color:white;
 canvas{
 background:black;
 border:3px solid white;
-}
-
-#gameOverScreen{
 display:none;
-background:#222;
-padding:20px;
-margin-top:20px;
 }
 
-.gold{
-color:gold;
-font-weight:bold;
+#startMenu{
+margin-top:100px;
+}
+
+#pauseMenu{
+display:none;
+font-size:40px;
+}
+
+#gameOver{
+display:none;
+}
+
+#mobileControls{
+position:fixed;
+bottom:20px;
+width:100%;
+display:flex;
+justify-content:space-between;
+padding:0 50px;
+}
+
+button{
+font-size:20px;
+padding:10px 20px;
 }
