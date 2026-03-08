@@ -1,23 +1,23 @@
 body{
-text-align:center;
-font-family:Arial;
-background:#111;
+background:#0e0e0e;
 color:white;
+font-family:Arial;
+text-align:center;
 }
 
 canvas{
-background:black;
 border:3px solid white;
+background:black;
 display:none;
 }
 
-#startMenu{
-margin-top:100px;
+#menu{
+margin-top:120px;
 }
 
-#pauseMenu{
+#pause{
 display:none;
-font-size:40px;
+font-size:50px;
 }
 
 #gameOver{
@@ -30,10 +30,10 @@ bottom:20px;
 width:100%;
 display:flex;
 justify-content:space-between;
-padding:0 50px;
+padding:0 60px;
 }
 
 button{
-font-size:20px;
-padding:10px 20px;
+padding:12px 24px;
+font-size:18px;
 }
